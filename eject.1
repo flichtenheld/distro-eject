@@ -3,13 +3,13 @@
 .\" It may be distributed under the GNU Public License, version 2, or
 .\" any higher version. See section COPYING of the GNU Public license
 .\" for conditions under which this file may be redistributed.
-.TH EJECT 1 "18 May 2001" "Linux" "User Commands"
+.TH EJECT 1 "12 May 2005" "Linux" "User Commands"
 .SH NAME
 eject \- eject removable media
 .SH SYNOPSIS
 eject \-h
 .br
-eject [\-vnrsfqp] [<name>]
+eject [\-vnrsfmqp] [<name>]
 .br
 eject [\-vn] \-d
 .br
@@ -161,7 +161,7 @@ names can be abbreviated as long as they are unique.
 .br
 \-t \-\-trayclose
 .br
-\-t \-\-traytoggle
+\-T \-\-traytoggle
 .br
 \-x \-\-cdspeed
 .br
@@ -304,10 +304,6 @@ cdrom_speed command.
 
 The -T option was added by Sybren Stuvel (sybren@thirdtower.com), with
 big thanks to Benjamin Schwenk (benjaminschwenk@yahoo.de).
-
- .SH SEE ALSO
- 
- mount(2), umount(2), mount(8), umount(8)
 
 .SH SEE ALSO
 
