@@ -1,0 +1,3 @@
+Template: debian-installer/eject-udeb/title
+Type: text
+_description: Eject a CD from the drive

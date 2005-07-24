@@ -1,0 +1,28 @@
+Source: eject
+Section: utils
+Priority: optional
+Build-Depends: gettext, debhelper (>= 4.2)
+Maintainer: Frank Lichtenheld <djpig@debian.org>
+Standards-Version: 3.6.1
+
+Package: eject
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Suggests: cdtool, setcd
+Description: ejects CDs and operates CD-Changers under Linux
+ This little program will eject CD-ROMs (assuming your drive supports
+ the CDROMEJECT ioctl). It also allows setting the autoeject feature,
+ currently supported by a number of the Linux CD-ROM drivers. See the
+ documentation in /usr/src/linux/Documentation for more information on
+ the autoeject feature.
+ .
+ On supported ATAPI/IDE multi-disc CD-ROM changers, it allows changing
+ the active disc.
+
+Package: eject-udeb
+Section: debian-installer
+XC-Package-Type: udeb
+XB-Installer-Menu-Item: 960
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: ejects CDs from d-i menu

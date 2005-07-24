@@ -1,0 +1,11 @@
+Version 2.1.0 incorporates Debian patches including a new -m option.
+
+Version 2.0.11 adds localized strings with support for Japanese.
+
+Version 2.0.10 adds localized strings with support for Taiwanese and French.
+
+Version 2.0.9 adds the --proc/-p option.
+
+Version 2.0.8 adds the --cdspeed/-x option.
+
+Version 2.0.6 now uses GNU automake/autoconf.

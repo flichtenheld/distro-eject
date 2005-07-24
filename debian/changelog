@@ -1,0 +1,280 @@
+eject (2.1.0-1) unstable; urgency=low
+
+  * new upstream release
+
+ -- Jeff Tranter <tranter@pobox.com>  Sun,  1 May 2005 14:44:00 +0400
+
+eject (2.0.13deb-8sarge2) unstable; urgency=low
+
+  * po/es.po: Added translation of packages' gettext strings
+    by Daniel Franganillo (Closes: #295743)
+
+ -- Frank Lichtenheld <djpig@debian.org>  Sun, 27 Feb 2005 00:55:42 +0100
+
+eject (2.0.13deb-8sarge1) unstable; urgency=low
+
+  * debian/po/it.po: Added translation by Stefano Melchior
+    (Closes: #279014)
+  * volname.1: Document the fact that volname works on normal files, too
+  * README: Fix a typo
+
+ -- Frank Lichtenheld <djpig@debian.org>  Tue, 25 Jan 2005 16:48:12 +0100
+
+eject (2.0.13deb-8) unstable; urgency=low
+
+  * eject.c: Don't try to eject /cdrom anymore, this location is
+    deprecated (support for /media was already added in -4)
+  * eject.1: Forgot to mention /media at one place in man page
+  * Both changes together should avoid any unexpected and undocumented
+    behaviour (Closes: #271527), thanx to Helge Kreutzmann for
+    alerting me to the problem
+
+ -- Frank Lichtenheld <djpig@debian.org>  Sun, 10 Oct 2004 20:13:29 +0200
+
+eject (2.0.13deb-7) unstable; urgency=low
+
+  * debian/po/cs.po: Added translation by
+    Jan Outrata (Closes: #260378)
+  * debian/control: Add other console based CD-ROM drive control
+    programs to Suggests: cdtool and setcd (Closes: #252372)
+    Thanks to Jari Aalto for the suggestion.
+  
+ -- Frank Lichtenheld <djpig@debian.org>  Tue, 20 Jul 2004 21:10:26 +0200
+
+eject (2.0.13deb-6) unstable; urgency=low
+
+  * Acknowledge NMU.
+  * debian/po/ja.po: Added translation by Hideki Yamane
+    (Closes: #251465)
+
+ -- Frank Lichtenheld <djpig@debian.org>  Fri, 28 May 2004 21:15:47 +0200
+
+eject (2.0.13deb-5.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Encode udeb templates in UTF-8 (closes: #251203).
+
+ -- Colin Watson <cjwatson@debian.org>  Thu, 27 May 2004 08:46:48 -0300
+
+eject (2.0.13deb-5) unstable; urgency=low
+
+  * debian/po/fr.po: Added translation by Christian Perrier
+    (Closes: #249238)
+  * debian/po/nl.po: Added translation by Luk Claes
+    (Closes: #250662)
+  * eject.1: Correct minus/hyphens in --no-unmount patch
+
+ -- Frank Lichtenheld <djpig@debian.org>  Sun, 16 May 2004 13:54:32 +0200
+
+eject (2.0.13deb-4) unstable; urgency=low
+
+  * eject.c: 
+    + Add patch by Bastian Kleineidam <calvin@debian.org>
+      to check return values of malloc, regcomp, close and fclose
+      (Closes: #214705)
+    + also try /media/, order is now /dev/, /media/, /mnt/
+    + fix fstab patch that lost the gettextization of a string
+  * eject.1: document /media/ change
+  * po/eject.pot,po/de_DE.po: Update pot files and German translation
+  * debian/watch: add watch file
+  * debian/copyright: remove superfluous colon from upstream URL
+  * debian/po/pt_BR.po: Added translation by Andre Luis Lopes
+    (Closes: #248779)
+
+ -- Frank Lichtenheld <djpig@debian.org>  Thu, 13 May 2004 13:35:37 +0200
+
+eject (2.0.13deb-3) unstable; urgency=low
+
+  * debian/control: Change section of eject-udeb to debian-installer.
+  * eject.1: Fix hyphen vs. minus mistakes.
+  * eject.c, eject.1: Add patch by Bastian Kleineidam <calvin@debian.org>
+    for a new -m, --no-unmount option (Closes: #227348)
+
+ -- Frank Lichtenheld <djpig@debian.org>  Tue, 27 Apr 2004 21:37:32 +0200
+
+eject (2.0.13deb-2) unstable; urgency=low
+
+  * debian/rules,debian/control,debhelper/compat: debhelperize
+  * debian/control,debian/rules: add eject-udeb package on
+    request of Sven Luther (Closes: #243166)
+  * debian/rules: install more docs (AUTHORS, NEWS, TODO)
+
+ -- Frank Lichtenheld <djpig@debian.org>  Sun, 11 Apr 2004 21:46:59 +0200
+
+eject (2.0.13deb-1) unstable; urgency=low
+
+  * New orig tarball without debian/ directory
+    to get rid of debian/files and debian/substvars
+  * Also delete debian/dirs as we don't need it, too
+
+ -- Frank Lichtenheld <djpig@debian.org>  Wed, 17 Mar 2004 16:27:40 +0100
+
+eject (2.0.13-5) unstable; urgency=low
+
+  * debian/copyright: Improve the copyright file a lot
+  * eject.c, volname.c: Update the FSF address
+
+ -- Frank Lichtenheld <djpig@debian.org>  Mon,  1 Mar 2004 02:20:47 +0100
+
+eject (2.0.13-4) unstable; urgency=low
+
+  * New maintainer (closes: #227776)
+  * Acknowledge NMU (closes: #214044, #214558)
+  * eject.1: Fix typos in manpage (closes: #221299)
+  * debian/rules: change the /cdrom patch to let
+    eject and volname behave as documented
+     + volname.c: add prefix "/dev/" to DEVICEDEFAULT since
+       the manpage claims that it should do that (closes: #219735)
+     + eject.c: also try "/cdrom" if device is "cdrom" to
+       cover /cdrom (I'm not so convinced about supporting this at
+      all, perhaps I will restore the upstream behaviour)
+  * debian/rules: Clean up. Support DEB_BUILD_OPTS.
+  * debian/control: Bump Standards-Version to 3.6.1
+
+ -- Frank Lichtenheld <djpig@debian.org>  Tue, 20 Jan 2004 22:07:43 +0100
+
+eject (2.0.13-3.1) unstable; urgency=low
+
+  * NMU
+  * Fix gettext build dependency. (closes: #214044)
+  * Add #include <stdlib.h> to volname.c.
+
+ -- Lukas Geyer <lukas@debian.org>  Wed,  8 Oct 2003 02:09:28 -0400
+
+eject (2.0.13-3) unstable; urgency=low
+
+  * Declare gettext build dependency. (closes: #214044)
+
+ -- Martin Mitchell <martin@debian.org>  Sat,  4 Oct 2003 17:57:11 +1000
+
+eject (2.0.13-2) unstable; urgency=low
+
+  * Update to standards version 3.6.1. (closes: #102448)
+  * Enable /cdrom as the default device. (closes: #173419)
+  * Apply patch to install gettext catalog files. (closes: #192829)
+  * Undo NMU breakage and apply patch to skip errors if /etc/fstab
+    is unreadable. Thanks to Lukas Geyer. (closes: #128597,#213359)
+
+ -- Martin Mitchell <martin@debian.org>  Sat,  4 Oct 2003 13:23:07 +1000
+
+eject (2.0.13-1.1) unstable; urgency=low
+
+  * Non-maintainer Upload.
+  * Use /cdrom as the default device. (Closes: #173419)
+  * Only consult /etc/fstab when the information is
+    needed. (Closes: #128597)
+
+ -- Petter Reinholdtsen <pere@debian.org>  Wed, 24 Sep 2003 10:22:14 +0200
+
+eject (2.0.13-1) unstable; urgency=low
+
+  * New upstream release.
+  * Update to standards version 3.5.8.
+
+ -- Martin Mitchell <martin@debian.org>  Mon, 23 Dec 2002 01:30:19 +1100
+
+eject (2.0.12-1) unstable; urgency=low
+
+  * New upstream release. (closes: #155172, #114148)
+  * Update copyright file. (closes: #133493)
+  * Update to standards version 3.5.7.
+
+ -- Martin Mitchell <martin@debian.org>  Sat,  7 Sep 2002 01:13:13 +1000
+
+eject (2.0.3-1) unstable; urgency=low
+
+  * New upstream release, with kernel 2.4 support. (closes: #88379)
+  * Correct manpage syntax. (closes: #90283)
+
+ -- Martin Mitchell <martin@debian.org>  Wed, 25 Apr 2001 12:07:56 +1000
+
+eject (2.0.2-2) unstable; urgency=low
+
+  * Update copyright information.
+  * Update to standards version 3.2.1. (closes: #80747, #82132, #82215)
+  * Patch to ignore commented fstab lines. (closes: #66810)
+  * Test with recent kernels to confirm behavior. (closes: #65755)
+  * Change to section utils. (closes: #74465)
+  * Support multiple symlinks. (closes: #80596)
+
+ -- Martin Mitchell <martin@debian.org>  Sun, 28 Jan 2001 12:55:17 +1100
+
+eject (2.0.2-1) unstable; urgency=low
+
+  * New upstream release. (closes: #34477)
+  * Fix already open behaviour. (closes: #34021)
+  * New code for cd changers. (closes: #18280)
+
+ -- Martin Mitchell <martin@debian.org>  Wed, 17 Mar 1999 00:38:31 +1100
+
+eject (1.5-8) unstable; urgency=low
+
+  * Minor source changes for powerpc compilation.
+
+ -- Martin Mitchell <martin@debian.org>  Thu,  3 Sep 1998 01:56:40 +1000
+
+eject (1.5-7) unstable; urgency=low
+
+  * Fix ejecting for /dev/scd devices. (#22706)
+
+ -- Martin Mitchell <martin@debian.org>  Sun, 14 Jun 1998 17:50:50 +1000
+
+eject (1.5-6) frozen unstable; urgency=low
+
+  * Fix -u option for unmounting before ejecting. (#18234)
+  * Update to standards version 2.4.1.
+
+ -- Martin Mitchell <martin@debian.org>  Tue, 12 May 1998 05:33:40 +1000
+
+eject (1.5-5) unstable; urgency=low
+
+  * Fix -u option when device was mounted as a symlink. (#12078)
+
+ -- Martin Mitchell <martin@debian.org>  Wed, 10 Dec 1997 05:08:42 +1100
+
+eject (1.5-4) unstable; urgency=low
+
+  * Update to standards version 2.3.0.1.
+
+ -- Martin Mitchell <martin@debian.org>  Wed, 26 Nov 1997 17:18:30 +1100
+
+eject (1.5-3) unstable; urgency=low
+
+  * New maintainer.
+
+ -- Martin Mitchell <martin@debian.org>  Wed, 26 Nov 1997 17:05:32 +1100
+
+eject (1.5-2.1) unstable; urgency=low
+
+  * Non-maintainer release.
+  * Libc6 compile.
+
+ -- Martin Mitchell <martin@debian.org>  Sat, 15 Nov 1997 01:56:15 +1100
+
+eject (1.5-2) unstable; urgency=low
+
+  * Change of maintainer
+
+ -- Benedikt Eric Heinen <beh@icemark.ch>  Mon, 9 Jun 1997 06:39:57 +0200
+
+eject (1.5-1) unstable; urgency=low
+
+  * New upstream release
+  * debmake
+
+ -- Christoph Lameter <clameter@debian.org>  Sat, 8 Feb 1997 19:47:17 -0800
+
+eject (1.4-2) unstable; urgency=low
+
+  * Missing newline at the end of debian/control
+
+ -- Christoph Lameter <clameter@debian.org>  Sun, 15 Sep 1996 14:51:46 +0800
+
+eject (1.4-1) unstable; urgency=low
+
+  * Initial Release
+
+ -- Christoph Lameter <clameter@debian.org>  Sun, 15 Sep 1996 14:51:46 +0800
+
+
+ 
