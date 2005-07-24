@@ -1,0 +1,11 @@
+.deps
+.in
+Makefile
+Makefile.in
+aclocal.m4
+build
+config.log
+config.status
+configure
+eject
+volname
