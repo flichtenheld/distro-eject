@@ -88,7 +88,7 @@
 }
 
 /* Global Variables */
-const char *version = VERSION; /* program version */
+static const char *version = VERSION; /* program version */
 int a_option = 0; /* command flags and arguments */
 int c_option = 0;
 int d_option = 0;
@@ -107,13 +107,13 @@ int m_option = 0;
 int a_arg = 0;
 int c_arg = 0;
 int x_arg = 0;
-char *programName; /* used in error messages */
+static char *programName; /* used in error messages */
 
 /*
  * These are the basenames of devices which can have multiple
  * partitions per device.
  */
-const char *partitionDevice[] = {
+static const char *partitionDevice[] = {
 	"hd",
 	"sd",
 	"xd",
@@ -884,7 +884,7 @@ static char *MultiplePartitions(const char *name)
 
 
 /* handle -x option */
-void HandleXOption(char *deviceName)
+static void HandleXOption(char *deviceName)
 {
 	int fd; 	   /* file descriptor for device */
 	if (x_option) {
