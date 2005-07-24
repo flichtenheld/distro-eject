@@ -100,6 +100,7 @@ int r_option = 0;
 int s_option = 0;
 int t_option = 0;
 int T_option = 0;
+int X_option = 0;
 int v_option = 0;
 int x_option = 0;
 int p_option = 0;
@@ -135,13 +136,14 @@ static void usage()
 "Usage:\n"
 "  eject -h				-- display command usage and exit\n"
 "  eject -V				-- display program version and exit\n"
-"  eject [-vnrsfq] [<name>]		-- eject device\n"
+"  eject [-vnrsfqpm] [<name>]		-- eject device\n"
 "  eject [-vn] -d			-- display default device\n"
 "  eject [-vn] -a on|off|1|0 [<name>]	-- turn auto-eject feature on or off\n"
 "  eject [-vn] -c <slot> [<name>]	-- switch discs on a CD-ROM changer\n"
 "  eject [-vn] -t [<name>]		-- close tray\n"
 "  eject [-vn] -T [<name>]		-- toggle tray\n"
 "  eject [-vn] -x <speed> [<name>]	-- set CD-ROM max speed\n"
+"  eject [-vn] -X [<name>]		-- list CD-ROM available speeds\n"
 "Options:\n"
 "  -v\t-- enable verbose output\n"
 "  -n\t-- don't eject, just show device found\n"
@@ -155,12 +157,12 @@ static void usage()
 , version);
 #ifdef GETOPTLONG
 	fprintf(stderr,_(
-"Long options:\n"
-"  -h --help   -v --verbose	 -d --default\n"
-"  -a --auto   -c --changerslot  -t --trayclose  -x --cdspeed\n"
-"  -r --cdrom  -s --scsi	 -f --floppy\n"
-"  -q --tape   -n --noop	 -V --version\n"
-"  -p --proc   -m --no-unmount -T --traytoggle\n"));
+       "Long options:\n"
+       "  -h --help   -v --verbose	 -d --default\n"
+       "  -a --auto   -c --changerslot	 -t --trayclose  -x --cdspeed\n"
+       "  -r --cdrom  -s --scsi		 -f --floppy	 -X --listspeed\n"
+       "  -q --tape   -n --noop		 -V --version\n"
+       "  -p --proc   -m --no-unmount	 -T --traytoggle\n"));
 #endif /* GETOPTLONG */
 	fprintf(stderr,_(
 "Parameter <name> can be a device file or a mount point.\n"
@@ -174,7 +176,7 @@ static void usage()
 /* Handle command line options. */
 static void parse_args(int argc, char **argv, char **device)
 {
-	const char *flags = "a:c:x:dfhnqrstTvVpm";
+	const char *flags = "a:c:x:dfhnqrstTXvVpm";
 #ifdef GETOPTLONG
 	static struct option long_options[] =
 	{
@@ -186,6 +188,7 @@ static void parse_args(int argc, char **argv, char **device)
 		{"trayclose",	no_argument,	   NULL, 't'},
 		{"traytoggle",	no_argument,	   NULL, 'T'},
 		{"cdspeed",	required_argument, NULL, 'x'},
+		{"listspeed",	no_argument,	   NULL, 'X'},
 		{"noop",	no_argument,	   NULL, 'n'},
 		{"cdrom",	no_argument,	   NULL, 'r'},
 		{"scsi",	no_argument,	   NULL, 's'},
@@ -276,6 +279,9 @@ static void parse_args(int argc, char **argv, char **device)
 			  break;
 		  case 't':
 			  t_option = 1;
+			  break;
+		  case 'X':
+			  X_option = 1;
 			  break;
 		  case 'T':
 			  T_option = 1;
@@ -525,6 +531,86 @@ static void SelectSpeedCdrom(int fd, int speed)
 #endif
 }
 
+/*
+ * Read Speed of CD-ROM drive. From Linux 2.6.13, the current speed is correctly reported
+ */
+static int ReadSpeedCdrom(const char *shortName)
+{
+	char line[512];
+	char *str_speed, *str_name;
+	int drive_number = -1, i;
+	FILE *f = fopen("/proc/sys/dev/cdrom/info", "r");
+	
+	if (f == NULL) {
+		fprintf(stderr, _("%s: unable to read the speed from /proc/sys/dev/cdrom/info\n"), programName);
+		exit(1);
+	}
+	
+	while (!feof(f)) {
+		fgets(line, sizeof(line), f);
+
+		/* find drive number from shortName in line "drive name" */
+		if (drive_number == -1) {
+			if (strncmp(line, "drive name:", 11) == 0) {
+				str_name = strtok(&line[11], "\t ");
+				drive_number = 0;
+				while (strncmp(shortName, str_name, strlen(shortName)) != 0) {
+					drive_number++;
+					str_name = strtok(NULL, "\t ");
+					if (str_name == NULL) {
+						fprintf(stderr, _("%s: error while finding CD-ROM name\n"), programName);
+						exit(1);
+					}
+				}
+			}
+		/* find line "drive speed" and read the correct speed */
+		} else {
+			if (strncmp(line, "drive speed:", 12) == 0) {
+				str_speed = strtok(&line[12], "\t ");
+				for (i = 1; i < drive_number; i++)
+					str_speed = strtok(NULL, "\t ");
+
+				if (str_speed == NULL) {
+					fprintf(stderr, _("%s: error while reading speed\n"), programName);
+					exit(1);
+				}
+				return atoi(str_speed);
+			}
+		}
+	}
+
+	fprintf(stderr, _("%s: error while reading speed\n"), programName);
+	exit(1);
+	return -1;
+}
+
+
+/*
+ * List Speed of CD-ROM drive.
+ */
+static void ListSpeedCdrom(const char *fullName, int fd)
+{
+#ifdef CDROM_SELECT_SPEED
+	int max_speed, curr_speed = 0, prev_speed;
+	char *shortName = rindex(fullName, '/') + 1;
+	
+	SelectSpeedCdrom(fd, 0);
+	max_speed = ReadSpeedCdrom(shortName);
+	while (curr_speed < max_speed) {
+		prev_speed = curr_speed;
+		SelectSpeedCdrom(fd, prev_speed + 1);
+		curr_speed = ReadSpeedCdrom(shortName);
+		if (curr_speed > prev_speed)
+			printf("%d ", curr_speed);
+		else
+			curr_speed = prev_speed + 1;
+	}
+
+	printf("\n");
+#else
+	fprintf(stderr, _("%s: CD-ROM select speed command not supported by this kernel\n"), programName);
+#endif
+}
 
 /*
  * Eject using CDROMEJECT ioctl. Return 1 if successful, 0 otherwise.
@@ -1035,6 +1121,15 @@ int main(int argc, char **argv)
 		fd = OpenDevice(deviceName);
 		ToggleTray(fd);
 		HandleXOption(deviceName);
+		exit(0);
+	}
+	
+	/* handle -X option */
+	if (X_option) {
+		if (v_option)
+			printf(_("%s: listing CD-ROM speed\n"), programName);
+		fd = OpenDevice(deviceName);
+		ListSpeedCdrom(deviceName, fd);
 		exit(0);
 	}
 
