@@ -372,6 +372,11 @@ static char *FindDevice(const char *name)
 	if (FileExists(buf))
 		return buf;
 
+	strcpy(buf, "/media/");
+	strcat(buf, name);
+	if (FileExists(buf))
+		return buf;
+
 	/* for devfs under Linux */
 	strcpy(buf, "/dev/cdroms/");
 	strcat(buf, name);
@@ -411,8 +416,11 @@ static void AutoEject(int fd, int onOff)
 {
 	int status;
 
-	status = ioctl(fd, CDROMEJECT_SW, onOff);
-	if (status != 0) {
+	if (onOff)
+		status = ioctl(fd, CDROM_SET_OPTIONS, CDO_AUTO_EJECT);
+	else
+		status = ioctl(fd, CDROM_CLEAR_OPTIONS, CDO_AUTO_EJECT);
+	if (status < 0) {
 		fprintf(stderr, _("%s: CD-ROM auto-eject command failed: %s\n"), programName, strerror(errno));
 		exit(1);
 	}
@@ -881,8 +889,8 @@ static void UnmountDevices(const char *pattern)
 			status = regexec(&preg, s1, 0, 0, 0);
 			if (status == 0) {
 				if (v_option)
-					printf(_("%s: unmounting `%s'\n"), programName, s1);
-				Unmount(s1);
+					printf(_("%s: unmounting `%s'\n"), programName, s2);
+				Unmount(s2);
 				regfree(&preg);
 			}
 		}
@@ -1134,8 +1142,8 @@ int main(int argc, char **argv)
 	/* unmount device if mounted */
 	if ((m_option != 1) && mounted) {
 		if (v_option)
-			printf(_("%s: unmounting `%s'\n"), programName, deviceName);
-		Unmount(deviceName);
+			printf(_("%s: unmounting device `%s' from `%s'\n"), programName, deviceName, mountName);
+		Unmount(mountName);
 	}
 
 	/* if it is a multipartition device, unmount any other partitions on

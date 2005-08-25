@@ -1,7 +1,7 @@
 Begin4
 Title:          Eject - Eject CD-ROM under software control 
-Version:        2.1.1
-Entered-date:   2005-08-23
+Version:        2.1.2
+Entered-date:   2005-08-24
 Description:    Program for ejecting removable media under software control.
                 Can also control the auto-eject feature of some drives and
                 can be used to switch CDs on an IDE/ATAPI CD changer.
@@ -9,7 +9,7 @@ Keywords:       CD-ROM, eject, changer, multiplatter
 Author:         tranter@pobox.com (Jeff Tranter)
 Maintained-by:  tranter@pobox.com (Jeff Tranter)
 Primary-site:   http://www.ibiblio.org/pub/Linux/utils/disk-management/
-		48K eject-2.1.1.tar.gz
+		48K eject-2.1.2.tar.gz
 Alternate-site: http://www.pobox.com/~tranter/eject.html
 Platforms:      Linux
 Copying-policy: GPL

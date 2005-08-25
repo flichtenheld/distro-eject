@@ -1,3 +1,5 @@
+Version 2.1.2 incorporates several Red Hat patches from Than Ngo.
+
 Version 2.1.1 incorporates Debian patch for the deprecated SCSO ioctl error.
 
 Version 2.1.0 incorporates Debian patches including a new -m option.

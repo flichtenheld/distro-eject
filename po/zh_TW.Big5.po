@@ -1,23 +1,24 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Free Software Foundation, Inc.
-# FIRST AUTHOR Kun-Chung Hsieh <linuxer@coventive.com>, 2001.
+# Traditional Chinese Messages for eject
+# Copyright (C) 2004 Free Software Foundation, Inc.
+# Kun-Chung Hsieh <linuxer@coventive.com>, 2001
+# Wei-Lun Chao <chaoweilun@pcmail.com.tw>, 2005
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: eject 2.0.13\n"
 "POT-Creation-Date: 2001-06-07 12:23+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Kun-Chung Hsieh <linuxer@coventive.com>\n"
-"Language-Team: taiwan <tw@li.org>\n"
+"PO-Revision-Date: 2005-05-12 15:15+0800\n"
+"Last-Translator: Wei-Lun Chao <chaoweilun@pcmail.com.tw>\n"
+"Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
-"Content-Transfer-Encoding: ENCODING\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../eject.c:110 ../eject.c:893
 #, c-format
 msgid "%s: device is `%s'\n"
-msgstr "%s: ³]³Æ¬O '%s'\n"
+msgstr "%s: è¨­å‚™æ˜¯ '%s'\n"
 
 #: ../eject.c:112
 msgid ""
@@ -40,24 +41,24 @@ msgid ""
 "  -q\t-- eject tape\n"
 "  -p\t-- use /proc/mounts instead of /etc/mtab\n"
 msgstr ""
-"Eject ª©¥» %s by Jeff Tranter (tranter@pobox.com)\n"
-"¥Îªk:\n"
-"  eject -h\t\t\t\t-- Åã¥Ü¥Îªk«áµ²§ô\n"
-"  eject -V\t\t\t\t-- Åã¥Üª©¥»«áµ²§ô\n"
-"  eject [-vnrsfq] [<name>]\t\t-- ¸õ¥X³]³Æ\n"
-"  eject [-vn] -d\t\t\t-- Åã¥Ü¤º©w³]³Æ¦WºÙ\n"
-"  eject [-vn] -a on|off|1|0 [<name>]\t-- ¦Û°Ê¸õ¥X¥\\¯à¶}Ãö\n"
-"  eject [-vn] -c <slot> [<name>]\t-- ¤Á´«¥úºĞÂd¤ºªº¥úºĞ¤ù\n"
-"  eject [-vn] -t [<name>]\t\t-- Ãö³¬©ì½L\n"
-"  eject [-vn] -x <speed> [<name>]\t-- ³]©w¥úºĞ¾÷³Ì§Ö³t«×\n"
-"¿ï¶µ:\n"
-"  -v\t-- ¥şµ{Åã¥Üª¬ºA\n"
-"  -n\t-- ¤£­n¸õ¥X¡A¥uÅã¥Ü³]³Æ¦³§ä¨ì§Y¥i\n"
-"  -r\t-- ¸õ¥X CD-ROM\n"
-"  -s\t-- ¸õ¥X SCSI ³]³Æ\n"
-"  -f\t-- ¸õ¥X³nºĞ¤ù\n"
-"  -q\t-- ¸õ¥XºÏ±a\n"
-"  -p\t-- ¨Ï¥Î /proc/mounts ¨Ó¨ú¥N /etc/mtab\n"
+"Eject ç‰ˆæœ¬ %s by Jeff Tranter (tranter@pobox.com)\n"
+"ç”¨æ³•:\n"
+"  eject -h\t\t\t\t-- é¡¯ç¤ºç”¨æ³•å¾ŒçµæŸ\n"
+"  eject -V\t\t\t\t-- é¡¯ç¤ºç‰ˆæœ¬å¾ŒçµæŸ\n"
+"  eject [-vnrsfq] [<name>]\t\t-- è·³å‡ºè¨­å‚™\n"
+"  eject [-vn] -d\t\t\t-- é¡¯ç¤ºå…§å®šè¨­å‚™åç¨±\n"
+"  eject [-vn] -a on|off|1|0 [<name>]\t-- è‡ªå‹•è·³å‡ºåŠŸèƒ½é–‹é—œ\n"
+"  eject [-vn] -c <slot> [<name>]\t-- åˆ‡æ›å…‰ç¢Ÿæ«ƒå…§çš„å…‰ç¢Ÿç‰‡\n"
+"  eject [-vn] -t [<name>]\t\t-- é—œé–‰æ‹–ç›¤\n"
+"  eject [-vn] -x <speed> [<name>]\t-- è¨­å®šå…‰ç¢Ÿæ©Ÿæœ€å¿«é€Ÿåº¦\n"
+"é¸é …:\n"
+"  -v\t-- å…¨ç¨‹é¡¯ç¤ºç‹€æ…‹\n"
+"  -n\t-- ä¸è¦è·³å‡ºï¼Œåªé¡¯ç¤ºè¨­å‚™æœ‰æ‰¾åˆ°å³å¯\n"
+"  -r\t-- è·³å‡º CD-ROM\n"
+"  -s\t-- è·³å‡º SCSI è¨­å‚™\n"
+"  -f\t-- è·³å‡ºè»Ÿç¢Ÿç‰‡\n"
+"  -q\t-- è·³å‡ºç£å¸¶\n"
+"  -p\t-- ä½¿ç”¨ /proc/mounts ä¾†å–ä»£ /etc/mtab\n"
 
 #: ../eject.c:133
 msgid ""
@@ -68,7 +69,7 @@ msgid ""
 "  -q --tape   -n --noop\t -V --version\n"
 "  -p --proc\n"
 msgstr ""
-"ªø¿ï¶µ:\n"
+"é•·é¸é …:\n"
 "  -h --help   -v --verbose\t -d --default\n"
 "  -a --auto   -c --changerslot  -t --trayclose  -x --cdspeed\n"
 "  -r --cdrom  -s --scsi\t -f --floppy\n"
@@ -82,284 +83,285 @@ msgid ""
 "If omitted, name defaults to `%s'.\n"
 "By default tries -r, -s, -f, and -q in order until success.\n"
 msgstr ""
-"°Ñ¼Æ <name> ¥i¥H¬O³]³ÆÀÉ¦W©ÎªÌ±¾¸üÂI¡C\n"
-"¤£¥[°Ñ¼Æ®É¡A¤º©w¬° `%s'¡C\n"
-"µ{¦¡¹w³]·|¨Ì§Ç´ú¸Õ -r, -s, -f, ©M -q ª½¨ì¦¨¥\\¡C\n"
+"åƒæ•¸ <name> å¯ä»¥æ˜¯è¨­å‚™æª”åæˆ–è€…æ›è¼‰é»ã€‚\n"
+"ä¸åŠ åƒæ•¸æ™‚ï¼Œå…§å®šç‚º `%s'ã€‚\n"
+"ç¨‹å¼é è¨­æœƒä¾åºæ¸¬è©¦ -r, -s, -f, å’Œ -q ç›´åˆ°æˆåŠŸã€‚\n"
 
 #: ../eject.c:193
 #, c-format
 msgid "%s: invalid argument to --auto/-a option\n"
-msgstr ""
+msgstr "%s: å°æ–¼ --auto/-a é¸é …è€Œè¨€æ˜¯ç„¡æ•ˆå¼•æ•¸\n"
 
 #: ../eject.c:205
 #, c-format
 msgid "%s: invalid argument to --changerslot/-c option\n"
-msgstr ""
+msgstr "%s: å°æ–¼ --changerslot/-c é¸é …è€Œè¨€æ˜¯ç„¡æ•ˆå¼•æ•¸\n"
 
 #: ../eject.c:217
 #, c-format
 msgid "%s: invalid argument to --cdspeed/-x option\n"
-msgstr ""
+msgstr "%s: å°æ–¼ ---cdspeed/-x é¸é …è€Œè¨€æ˜¯ç„¡æ•ˆå¼•æ•¸\n"
 
 #: ../eject.c:254
 #, c-format
 msgid "eject version %s by Jeff Tranter (tranter@pobox.com)\n"
-msgstr "eject ª©¥» %s ¥Ñ Jeff Tranter ³]­p <tranter@pobox.com>\n"
+msgstr "eject ç‰ˆæœ¬ %s ç”± Jeff Tranter è¨­è¨ˆ <tranter@pobox.com>\n"
 
 #: ../eject.c:264
 #, c-format
 msgid "%s: too many arguments\n"
-msgstr "%s: ¤Ó¦h°Ñ¼Æ¤F\n"
+msgstr "%s: å¤ªå¤šå¼•æ•¸äº†\n"
 
 #: ../eject.c:366
 #, c-format
 msgid "%s: CD-ROM auto-eject command failed: %s\n"
-msgstr "%s: ¥úºĞ¦Û°Ê¸õ¥X©R¥O¥¢±Ñ: %s\n"
+msgstr "%s: å…‰ç¢Ÿè‡ªå‹•è·³å‡ºå‘½ä»¤å¤±æ•—: %s\n"
 
 #: ../eject.c:383
 #, c-format
 msgid "%s: CD-ROM select disc command failed: %s\n"
-msgstr "%s: ¿ï¾Ü¥úºĞªº©R¥O¥¢±Ñ: %s\n"
+msgstr "%s: é¸æ“‡å…‰ç¢Ÿçš„å‘½ä»¤å¤±æ•—: %s\n"
 
 #: ../eject.c:389
 #, c-format
 msgid "%s: CD-ROM load from slot command failed: %s\n"
-msgstr ""
+msgstr "%s: å¾å…‰ç¢Ÿæ«ƒè¼‰å…¥å…‰ç¢Ÿçš„å‘½ä»¤å¤±æ•—: %s\n"
 
 #: ../eject.c:393
 #, c-format
 msgid "%s: IDE/ATAPI CD-ROM changer not supported by this kernel\n"
-msgstr "%s: IDE/ATAPI ¤¶­±ªº¥úºĞÂd¨Ã¤£³Q¥»ª©ªº®Ö¤ß¤ŞÀº (kernel) ©Ò¤ä´©\n"
+msgstr "%s: IDE/ATAPI ä»‹é¢çš„å…‰ç¢Ÿæ«ƒä¸¦ä¸è¢«æœ¬ç‰ˆçš„æ ¸å¿ƒå¼•æ“ (kernel) æ‰€æ”¯æ´\n"
 
 #: ../eject.c:408
 #, c-format
 msgid "%s: CD-ROM tray close command failed: %s\n"
-msgstr "%s: ¥úºĞ¾÷©ì½LÃö³¬ªº©R¥O¥¢±Ñ: %s\n"
+msgstr "%s: å…‰ç¢Ÿæ©Ÿæ‹–ç›¤é—œé–‰çš„å‘½ä»¤å¤±æ•—: %s\n"
 
 #: ../eject.c:412
 #, c-format
 msgid "%s: CD-ROM tray close command not supported by this kernel\n"
-msgstr "%s: ¥úºĞ¾÷©ì½LÃö³¬ªº©R¥O¨Ã¤£³Q¥»ª©ªº®Ö¤ß¤ŞÀº (kernel) ©Ò¤ä´©\n"
+msgstr "%s: å…‰ç¢Ÿæ©Ÿæ‹–ç›¤é—œé–‰çš„å‘½ä»¤ä¸¦ä¸è¢«æœ¬ç‰ˆçš„æ ¸å¿ƒå¼•æ“ (kernel) æ‰€æ”¯æ´\n"
 
 #: ../eject.c:429
 #, c-format
 msgid "%s: CD-ROM select speed command failed: %s\n"
-msgstr "%s: ¥úºĞ¾÷³t«×¿ï¾Üªº©R¥O¥¢±Ñ: %s\n"
+msgstr "%s: å…‰ç¢Ÿæ©Ÿé€Ÿåº¦é¸æ“‡çš„å‘½ä»¤å¤±æ•—: %s\n"
 
 #: ../eject.c:433
 #, c-format
 msgid "%s: CD-ROM select speed command not supported by this kernel\n"
-msgstr "%s: ¥úºĞ¾÷³t«×¿ï¾Üªº©R¥O¨Ã¤£³Q¥»ª©ªº®Ö¤ß¤ŞÀº (kernel) ©Ò¤ä´©\n"
+msgstr "%s: å…‰ç¢Ÿæ©Ÿé€Ÿåº¦é¸æ“‡çš„å‘½ä»¤ä¸¦ä¸è¢«æœ¬ç‰ˆçš„æ ¸å¿ƒå¼•æ“ (kernel) æ‰€æ”¯æ´\n"
 
 #: ../eject.c:543
 #, c-format
 msgid "%s: unable to exec /bin/umount of `%s': %s\n"
-msgstr "%s: µLªk°õ¦æ /bin/umount '%s': %s\n"
+msgstr "%s: ç„¡æ³•åŸ·è¡Œ /bin/umount '%s': %s\n"
 
 #: ../eject.c:548
 #, c-format
 msgid "%s: unable to fork: %s\n"
-msgstr "%s: µLªk fork: %s\n"
+msgstr "%s: ç„¡æ³• fork: %s\n"
 
 #: ../eject.c:553
 #, c-format
 msgid "%s: unmount of `%s' did not exit normally\n"
-msgstr "%s: ¨ø¸ü '%s' µo¥Í¤£¥¿±`µ²§ô\n"
+msgstr "%s: å¸è¼‰ '%s' ç™¼ç”Ÿä¸æ­£å¸¸çµæŸ\n"
 
 #: ../eject.c:557
 #, c-format
 msgid "%s: unmount of `%s' failed\n"
-msgstr "%s: ¨ø¸ü '%s' ¥¢±Ñ\n"
+msgstr "%s: å¸è¼‰ '%s' å¤±æ•—\n"
 
 #: ../eject.c:570
 #, c-format
 msgid "%s: unable to open `%s'\n"
-msgstr "%s: µLªk¶}±Ò '%s'\n"
+msgstr "%s: ç„¡æ³•é–‹å•Ÿ '%s'\n"
 
 #: ../eject.c:615 ../eject.c:691
 #, c-format
 msgid "unable to open %s: %s\n"
-msgstr "µLªk¶}±Ò %s: %s\n"
+msgstr "ç„¡æ³•é–‹å•Ÿ %s: %s\n"
 
 #: ../eject.c:655
 #, c-format
 msgid "%s: unable to open /etc/fstab: %s\n"
-msgstr "%s: µLªk¶}±Ò /etc/fstab ÀÉ: %s\n"
+msgstr "%s: ç„¡æ³•é–‹å•Ÿ /etc/fstab æª”: %s\n"
 
 #: ../eject.c:701 ../eject.c:928
 #, c-format
 msgid "%s: unmounting `%s'\n"
-msgstr "%s: ¨ø¸ü '%s'\n"
+msgstr "%s: å¸è¼‰ '%s'\n"
 
 #: ../eject.c:768
 #, c-format
 msgid "%s: `%s' is a multipartition device\n"
-msgstr ""
+msgstr "%s: `%s' æ˜¯å¤šé‡åˆ†å‰²å€è£ç½®\n"
 
 #: ../eject.c:773
 #, c-format
 msgid "%s: `%s' is not a multipartition device\n"
-msgstr ""
+msgstr "%s: `%s' ä¸æ˜¯å¤šé‡åˆ†å‰²å€è£ç½®\n"
 
 #: ../eject.c:786
 #, c-format
 msgid "%s: setting CD-ROM speed to auto\n"
-msgstr "%s: ³]©w¥úºĞ¾÷³t«×¬°¦Û°Ê\n"
+msgstr "%s: è¨­å®šå…‰ç¢Ÿæ©Ÿé€Ÿåº¦ç‚ºè‡ªå‹•\n"
 
 #: ../eject.c:788
 #, c-format
 msgid "%s: setting CD-ROM speed to %dX\n"
-msgstr "%s: ³]©w¥úºĞ¾÷³t«×¨ì %dX\n"
+msgstr "%s: è¨­å®šå…‰ç¢Ÿæ©Ÿé€Ÿåº¦åˆ° %dX\n"
 
 #: ../eject.c:824
 #, c-format
 msgid "%s: default device: `%s'\n"
-msgstr "%s: ¤º©w³]³Æ¬°: '%s'\n"
+msgstr "%s: å…§å®šè¨­å‚™ç‚º: '%s'\n"
 
 #: ../eject.c:832
 #, c-format
 msgid "%s: using default device `%s'\n"
-msgstr "%s: ¨Ï¥Î¤º©w³]³Æ '%s'\n"
+msgstr "%s: ä½¿ç”¨å…§å®šè¨­å‚™ '%s'\n"
 
 #: ../eject.c:841
 #, c-format
 msgid "%s: device name is `%s'\n"
-msgstr "%s: ³]³Æ¦WºÙ¬° '%s'\n"
+msgstr "%s: è¨­å‚™åç¨±ç‚º '%s'\n"
 
 #: ../eject.c:846
 #, c-format
 msgid "%s: unable to find or open device for: `%s'\n"
-msgstr "%s: §ä¤£¨ì/µLªk¶}±Ò³]³Æ: '%s'\n"
+msgstr "%s: æ‰¾ä¸åˆ°æˆ–ç„¡æ³•é–‹å•Ÿè¨­å‚™: '%s'\n"
 
 #: ../eject.c:850
 #, c-format
 msgid "%s: expanded name is `%s'\n"
-msgstr "%s: ÂX®i¦WºÙ¬° '%s'\n"
+msgstr "%s: æ“´å±•åç¨±ç‚º '%s'\n"
 
 #: ../eject.c:855
 #, c-format
 msgid "%s: `%s' is a link to `%s'\n"
-msgstr "%s: '%s' ³QÁäµ²¨ì '%s'\n"
+msgstr "%s: '%s' è¢«éµçµåˆ° '%s'\n"
 
 #: ../eject.c:864
 #, c-format
 msgid "%s: maximum symbolic link depth exceeded: `%s'\n"
-msgstr "%s: ¶W¹L²Å¦¡Áäµ²ªº³Ì¤j²`«×­È '%s'\n"
+msgstr "%s: è¶…éç¬¦è™Ÿéµçµçš„æœ€å¤§æ·±åº¦å€¼ '%s'\n"
 
 #: ../eject.c:872
 #, c-format
 msgid "%s: `%s' is mounted at `%s'\n"
-msgstr "%s: '%s' ³Q±¾¸ü¨ì '%s'\n"
+msgstr "%s: '%s' è¢«æ›è¼‰åˆ° '%s'\n"
 
 #: ../eject.c:874
 #, c-format
 msgid "%s: `%s' is not mounted\n"
-msgstr "%s: '%s' ¨Ã¥¼¸ü¤W\n"
+msgstr "%s: '%s' ä¸¦æœªè¼‰ä¸Š\n"
 
 #: ../eject.c:885
 #, c-format
 msgid "%s: `%s' can be mounted at `%s'\n"
-msgstr "%s: '%s' ¥i±¾¦b '%s' ¤W\n"
+msgstr "%s: '%s' å¯æ›åœ¨ '%s' ä¸Š\n"
 
 #: ../eject.c:887
 #, c-format
 msgid "%s: `%s' is not a mount point\n"
-msgstr "%s: '%s' ¨Ã¤£¬O±¾¸üÂI\n"
+msgstr "%s: '%s' ä¸¦ä¸æ˜¯æ›è¼‰é»\n"
 
 #: ../eject.c:895
 #, c-format
 msgid "%s: exiting due to -n/--noop option\n"
-msgstr ""
+msgstr "%s: ç”±æ–¼ -n/--noop é¸é …çš„å› ç´ è€Œè·³å‡º\n"
 
 #: ../eject.c:903
 #, c-format
 msgid "%s: enabling auto-eject mode for `%s'\n"
-msgstr "%s: ¶}±Ò '%s' ¦Û°Ê¸õ¥X¼Ò¦¡\n"
+msgstr "%s: é–‹å•Ÿ '%s' è‡ªå‹•è·³å‡ºæ¨¡å¼\n"
 
 #: ../eject.c:905
 #, c-format
 msgid "%s: disabling auto-eject mode for `%s'\n"
-msgstr "%s: Ãö³¬ '%s' ¦Û°Ê¸õ¥X¼Ò¦¡\n"
+msgstr "%s: é—œé–‰ '%s' è‡ªå‹•è·³å‡ºæ¨¡å¼\n"
 
 #: ../eject.c:915
 #, c-format
 msgid "%s: closing tray\n"
-msgstr "%s: Ãö³¬©ì½L\n"
+msgstr "%s: é—œé–‰æ‹–ç›¤\n"
 
 #: ../eject.c:941
 #, c-format
 msgid "%s: selecting CD-ROM disc #%d\n"
-msgstr "%s: ¿ï¾Ü¥úºĞ¤ù½s¸¹ #%d\n"
+msgstr "%s: é¸æ“‡å…‰ç¢Ÿç‰‡ç·¨è™Ÿ #%d\n"
 
 #: ../eject.c:959
 #, c-format
 msgid "%s: trying to eject `%s' using CD-ROM eject command\n"
-msgstr "%s: À|¸Õ¨Ï¥Î CD-ROM ¸õ¥X«ü¥O±N '%s' ¸õ¥X\n"
+msgstr "%s: å˜—è©¦ä½¿ç”¨ CD-ROM è·³å‡ºæŒ‡ä»¤å°‡ '%s' è·³å‡º\n"
 
 #: ../eject.c:963
 #, c-format
 msgid "%s: CD-ROM eject command succeeded\n"
-msgstr "%s: ¥úºĞ¤ù¸õ¥X«ü¥O¦¨¥\\\n"
+msgstr "%s: å…‰ç¢Ÿç‰‡è·³å‡ºæŒ‡ä»¤æˆåŠŸ\n"
 
 #: ../eject.c:965
 #, c-format
 msgid "%s: CD-ROM eject command failed\n"
-msgstr "%s: ¥úºĞ¤ù¸õ¥X«ü¥O¥¢±Ñ\n"
+msgstr "%s: å…‰ç¢Ÿç‰‡è·³å‡ºæŒ‡ä»¤å¤±æ•—\n"
 
 #: ../eject.c:971
 #, c-format
 msgid "%s: trying to eject `%s' using SCSI commands\n"
-msgstr "%s: À|¸Õ¨Ï¥Î SCSI ¸õ¥X«ü¥O±N '%s' ¸õ¥X\n"
+msgstr "%s: å˜—è©¦ä½¿ç”¨ SCSI è·³å‡ºæŒ‡ä»¤å°‡ '%s' è·³å‡º\n"
 
 #: ../eject.c:975
 #, c-format
 msgid "%s: SCSI eject succeeded\n"
-msgstr "%s: SCSI ¸õ¥X¦¨¥\\\n"
+msgstr "%s: SCSI è·³å‡ºæˆåŠŸ\n"
 
 #: ../eject.c:977
 #, c-format
 msgid "%s: SCSI eject failed\n"
-msgstr "%s: SCSI ¸õ¥X¥¢±Ñ\n"
+msgstr "%s: SCSI è·³å‡ºå¤±æ•—\n"
 
 #: ../eject.c:983
 #, c-format
 msgid "%s: trying to eject `%s' using floppy eject command\n"
-msgstr "%s: À|¸Õ¨Ï¥Î³nºĞ¸õ¥X«ü¥O±N '%s' ¸õ¥X\n"
+msgstr "%s: å˜—è©¦ä½¿ç”¨è»Ÿç¢Ÿè·³å‡ºæŒ‡ä»¤å°‡ '%s' è·³å‡º\n"
 
 #: ../eject.c:987
 #, c-format
 msgid "%s: floppy eject command succeeded\n"
-msgstr "%s: ³nºĞ¸õ¥X©R¥O¦¨¥\\\n"
+msgstr "%s: è»Ÿç¢Ÿè·³å‡ºå‘½ä»¤æˆåŠŸ\n"
 
 #: ../eject.c:989
 #, c-format
 msgid "%s: floppy eject command failed\n"
-msgstr "%s: ³nºĞ¸õ¥X©R¥O¿ù»~\n"
+msgstr "%s: è»Ÿç¢Ÿè·³å‡ºå‘½ä»¤éŒ¯èª¤\n"
 
 #: ../eject.c:995
 #, c-format
 msgid "%s: trying to eject `%s' using tape offline command\n"
-msgstr ""
+msgstr "%s: å˜—è©¦ä½¿ç”¨ç£å¸¶é›¢ç·šæŒ‡ä»¤å°‡ '%s' è·³å‡º\n"
 
 #: ../eject.c:999
 #, c-format
 msgid "%s: tape offline command succeeded\n"
-msgstr ""
+msgstr "%s: ç£å¸¶é›¢ç·šå‘½ä»¤æˆåŠŸ\n"
 
 #: ../eject.c:1001
 #, c-format
 msgid "%s: tape offline command failed\n"
-msgstr ""
+msgstr "%s: ç£å¸¶é›¢ç·šå‘½ä»¤å¤±æ•—\n"
 
 #: ../eject.c:1006
 #, c-format
 msgid "%s: unable to eject, last error: %s\n"
-msgstr "%s: µLªk¸õ¥X¡A¿ù»~½X¬°: %s\n"
+msgstr "%s: ç„¡æ³•è·³å‡ºï¼ŒéŒ¯èª¤ç¢¼ç‚º: %s\n"
 
 #: ../volname.c:57
 msgid "usage: volname [<device-file>]\n"
-msgstr "¥Îªk: volname [<³]³ÆÀÉ¦W>]\n"
+msgstr "ç”¨æ³•: volname [<è¨­å‚™æª”å>]\n"
 
 #: ../volname.c:63 ../volname.c:69 ../volname.c:75
 msgid "volname"
-msgstr ""
+msgstr "volname"
+

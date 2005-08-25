@@ -2,7 +2,7 @@
 
 Summary: ejects removable media and controls auto ejection
 Name: eject
-Version: 2.1.1
+Version: 2.1.2
 %define src %{name}-%{version}
 Release: 2XL
 Copyright: GPL

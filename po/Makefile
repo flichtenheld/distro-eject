@@ -4,7 +4,7 @@ INSTALL = install
 MODIR = $(PREFIX)/share/locale
 POTFILES = ../*.c ../*.h
 #   ZH translation does not work
-POFILES= de.po fr.po ja.po es.po
+POFILES= de.po fr.po ja.po es.po zh_TW.po
 D_NLS= zh_TW.Big5
 
 all:
