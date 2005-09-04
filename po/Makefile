@@ -3,9 +3,7 @@ PREFIX=$(DESTDIR)/usr
 INSTALL = install
 MODIR = $(PREFIX)/share/locale
 POTFILES = ../*.c ../*.h
-#   ZH translation does not work
 POFILES= de.po fr.po ja.po es.po zh_TW.po
-D_NLS= zh_TW.Big5
 
 all:
 
@@ -14,14 +12,14 @@ fix-po-files:
 	mv de_DE.po de.po
 	mv es_ES.po es.po
 	mv ja_JP.eucJP.po ja.po
-	mv zh_TW.Big5.po zh_TW.po
+	mv zh_TW.UTF-8.po zh_TW.po
 
 restitute-po-files:
 	mv fr.po fr_FR.po
 	mv de.po de_DE.po
 	mv es.po es_ES.po
 	mv ja.po ja_JP.eucJP.po
-	mv zh_TW.po zh_TW.Big5.po
+	mv zh_TW.po zh_TW.UTF-8.po
 
 mo:
 	files='$(POFILES)'; \
