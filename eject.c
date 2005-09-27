@@ -953,11 +953,18 @@ static char *MultiplePartitions(const char *name)
 		strcpy(pattern, "^/dev/");
 		strcat(pattern, partitionDevice[i]);
 		strcat(pattern, "[a-z]([0-9]?[0-9])?$");
-		regcomp(&preg, pattern, REG_EXTENDED|REG_NOSUB);
+		if (regcomp(&preg, pattern, REG_EXTENDED|REG_NOSUB) != 0) {
+			perror(programName);
+			exit(1);
+		}
 		status = regexec(&preg, name, 1, 0, 0);
 		regfree(&preg);
 		if (status == 0) {
 			result = (char *) malloc(strlen(name) + 25);
+			if (result == NULL) {
+				fprintf(stderr, _("%s: could not allocate memory\n"), programName);
+				exit(1);
+			}
 			strcpy(result, name);
 			result[strlen(partitionDevice[i]) + 6] = 0;
 			strcat(result, "([0-9]?[0-9])?$");

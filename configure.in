@@ -3,7 +3,16 @@ AC_INIT(eject.c)
 AM_INIT_AUTOMAKE(eject, 2.1.2)
 
 dnl Checks for options
-AC_ARG_ENABLE(default-device,[ --enable-default-device set default CD-ROM device [default=cdrom]],DEFAULTDEVICE=$enableval,DEFAULTDEVICE=cdrom)
+AC_ARG_ENABLE(default-device,
+	[  --enable-default-device set default CD-ROM device @<:@default=cdrom@:>@],
+	DEFAULTDEVICE=$enableval, DEFAULTDEVICE=cdrom)
+AC_ARG_ENABLE(nls,
+	[  --disable-nls           disable support for nls @<:@default=enable@:>@],
+	use_nls=$enableval, use_nls=yes)
+if test "x$use_nls" != "xno" ; then
+	CFLAGS="$CFLAGS -DUSE_NLS=1"
+fi
+AM_CONDITIONAL(USE_NLS, test "x$use_nls" != "xno")
 
 dnl Checks for programs
 AC_PROG_CC
