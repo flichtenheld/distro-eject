@@ -6,7 +6,7 @@ if USE_NLS
 SUBDIRS = po
 endif
 
-AM_CPPFLAGS = -I/usr/src/linux -I/usr/src/linux/include -DDEFAULTDEVICE=\"$(DEFAULTDEVICE)\" -DGETOPTLONG
+AM_CPPFLAGS = -DDEFAULTDEVICE=\"$(DEFAULTDEVICE)\" -DGETOPTLONG
 AM_CFLAGS = -Wall $(RPM_OPT_FLAGS)
 
 man_MANS = eject.1 volname.1
