@@ -1,3 +1,5 @@
+Version 2.1.3 incorporates several Gentoo patches from Mike Frysinger.
+
 Version 2.1.2 incorporates several Red Hat patches from Than Ngo.
 
 Version 2.1.1 incorporates Debian patch for the deprecated SCSO ioctl error.
