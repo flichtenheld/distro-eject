@@ -3,22 +3,24 @@ PREFIX=$(DESTDIR)/usr
 INSTALL = install
 MODIR = $(PREFIX)/share/locale
 POTFILES = ../*.c ../*.h
-POFILES= de.po fr.po ja.po es.po zh_TW.po
+POFILES= de.po es.po fr.po ja.po tr.po zh_TW.po
 
 all:
 
 fix-po-files:
-	mv fr_FR.po fr.po
 	mv de_DE.po de.po
 	mv es_ES.po es.po
+	mv fr_FR.po fr.po
 	mv ja_JP.eucJP.po ja.po
+	mv tr_TR.po tr.po
 	mv zh_TW.UTF-8.po zh_TW.po
 
 restitute-po-files:
-	mv fr.po fr_FR.po
 	mv de.po de_DE.po
 	mv es.po es_ES.po
+	mv fr.po fr_FR.po
 	mv ja.po ja_JP.eucJP.po
+	mv tr.po tr_TR.po
 	mv zh_TW.po zh_TW.UTF-8.po
 
 mo:
