@@ -6,7 +6,8 @@
  *
  ********************************************************************
  *
- * Copyright (C) 1994-2005 Jeff Tranter (tranter@pobox.com)
+ * Copyright (C) 1994-2001 Jeff Tranter (tranter@pobox.com)
+ * Copyright (C) 2004, 2005 Frank Lichtenheld (djpig@debian.org)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,12 +36,6 @@
 #error DEFAULTDEVICE not set, check Makefile
 #endif
 
-#include <linux/version.h>
-/* handy macro found in 2.1 kernels, but not in older ones */
-#ifndef KERNEL_VERSION
-#define KERNEL_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + (c))
-#endif
-
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -58,13 +53,20 @@
 #include <sys/ioctl.h>
 #include <sys/wait.h>
 #include <sys/mtio.h>
+#include <sys/mount.h>
+
+#if defined(__linux__)
+#include <linux/version.h>
+/* handy macro found in 2.1 kernels, but not in older ones */
+#ifndef KERNEL_VERSION
+#define KERNEL_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + (c))
+#endif 
 #include <linux/types.h>
 #include <linux/cdrom.h>
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2,1,0)
 #include <linux/ucdrom.h>
 #endif
 #include <linux/fd.h>
-#include <sys/mount.h>
 #include <scsi/scsi.h>
 #include <scsi/sg.h>
 #include <scsi/scsi_ioctl.h>
@@ -75,6 +77,25 @@
  * again.
  */
 #define TRAY_WAS_ALREADY_OPEN_USECS  200000	/* about 0.2 seconds */
+
+
+#define CLOSE(fd) if (close(fd)==-1) { \
+    perror(programName); \
+    exit(1); \
+}
+
+#define FCLOSE(fd) if (fclose(fd)==-1) { \
+    perror(programName); \
+    exit(1); \
+}
+
+#define HAVE_EJECT_SCSI
+#define HAVE_EJECT_FLOPPY
+#define HAVE_EJECT_TAPE
+
+#elif defined(__FreeBSD_kernel__)
+#include <sys/cdio.h>
+#endif /* if defined(__linux__) */
 
 
 #define CLOSE(fd) if (close(fd)==-1) { \
@@ -148,21 +169,38 @@ static void usage()
 "  -v\t-- enable verbose output\n"
 "  -n\t-- don't eject, just show device found\n"
 "  -r\t-- eject CD-ROM\n"
+#ifdef HAVE_EJECT_SCSI
 "  -s\t-- eject SCSI device\n"
+#endif
+#ifdef HAVE_EJECT_FLOPPY
 "  -f\t-- eject floppy\n"
+#endif
+#ifdef HAVE_EJECT_TAPE
 "  -q\t-- eject tape\n"
+#endif
 "  -p\t-- use /proc/mounts instead of /etc/mtab\n"
 "  -m\t-- do not unmount device even if it is mounted\n"
 )
 , version);
 #ifdef GETOPTLONG
 	fprintf(stderr,_(
-       "Long options:\n"
-       "  -h --help   -v --verbose	 -d --default\n"
-       "  -a --auto   -c --changerslot	 -t --trayclose  -x --cdspeed\n"
-       "  -r --cdrom  -s --scsi		 -f --floppy	 -X --listspeed\n"
-       "  -q --tape   -n --noop		 -V --version\n"
-       "  -p --proc   -m --no-unmount	 -T --traytoggle\n"));
+"Long options:\n"
+"  -h --help   -v --verbose      -d --default\n"
+"  -a --auto   -c --changerslot  -t --trayclose  -x --cdspeed\n"
+"  -r --cdrom"
+#ifdef HAVE_EJECT_SCSI
+"  -s --scsi"
+#endif
+#ifdef HAVE_EJECT_FLOPPY
+"         -f --floppy"
+#endif
+"     -X --listspeed"
+#ifdef HAVE_EJECT_TAPE
+"     -q --tape"
+#endif
+"\n"
+"  -n --noop   -V --version\n"
+"  -p --proc   -m --no-unmount   -T --traytoggle\n"));
 #endif /* GETOPTLONG */
 	fprintf(stderr,_(
 "Parameter <name> can be a device file or a mount point.\n"
@@ -310,18 +348,23 @@ static void parse_args(int argc, char **argv, char **device)
 
 
 /* Return 1 if file/device exists, 0 otherwise. */
-static int FileExists(const char *name)
+static int FileExists(const char *name, const int try, int *found)
 {
 
-	/*
+        if (!found) return -1;
+        /*
 	 * access() uses the UID, not the EUID. This way a normal user
 	 * cannot find out if a file (say, /root/fubar) exists or not, even
 	 * if eject is SUID root
 	 */
 	if (access (name, F_OK) == 0) {
-		return 1;
-	}	else {
-		return 0;
+	  (*found)++;
+	  if (try <= (*found))
+	    return 1;
+	  else
+	    return 0;
+	} else {
+	  return 0;
 	}
 }
 
@@ -345,64 +388,68 @@ static int FileExists(const char *name)
 static char *FindDevice(const char *name)
 {
 	char *buf;
+	static int try = 0;
+	int found = 0;
 
 	buf = (char *) malloc(strlen(name)+14); /* to allow for "/dev/cdroms/ + "0" + null */
 	if (buf==NULL) {
 		fprintf(stderr, _("%s: could not allocate memory\n"), programName);
 		exit(1);
 	}
+
+	if (try == INT_MAX) {
+	  fprintf(stderr, _("%s: FindDevice called too often\n"), programName );;
+	  exit(1);
+	} else
+	  try++;
+
 	if ((name[0] == '.') || (name[0] == '/')) {
 		strcpy(buf, name);
-		if (FileExists(buf))
+		if (FileExists(buf, try, &found))
 			return buf;
 	}
 
 	strcpy(buf, "/dev/");
 	strcat(buf, name);
-	if (FileExists(buf))
+	if (FileExists(buf, try, &found))
 		return buf;
 
 	strcpy(buf, "/media/");
 	strcat(buf, name);
-	if (FileExists(buf))
+	if (FileExists(buf, try, &found))
 		return buf;
 	
 	strcpy(buf, "/mnt/");
 	strcat(buf, name);
-	if (FileExists(buf))
-		return buf;
-
-	strcpy(buf, "/media/");
-	strcat(buf, name);
-	if (FileExists(buf))
+	if (FileExists(buf, try, &found))
 		return buf;
 
 	/* for devfs under Linux */
 	strcpy(buf, "/dev/cdroms/");
 	strcat(buf, name);
-	if (FileExists(buf))
+	if (FileExists(buf, try, &found))
 		return buf;
 
 	strcpy(buf, "/dev/cdroms/");
 	strcat(buf, name);
 	strcat(buf, "0");
-	if (FileExists(buf))
+	if (FileExists(buf, try, &found))
 		return buf;
 
 	/* for devfs under Solaris */
 	strcpy(buf, "/dev/rdsk/");
 	strcat(buf, name);
-	if (FileExists(buf))
+	if (FileExists(buf, try, &found))
 		return buf;
 
 	strcpy(buf, "/dev/dsk/");
 	strcat(buf, name);
-	if (FileExists(buf))
+	if (FileExists(buf, try, &found))
 		return buf;
 
 	strcpy(buf, "./");
 	strcat(buf, name);
-	if (FileExists(buf))
+	if (FileExists(buf, try, &found))
 		return buf;
 
 	free(buf);
@@ -414,12 +461,16 @@ static char *FindDevice(const char *name)
 /* Set or clear auto-eject mode. */
 static void AutoEject(int fd, int onOff)
 {
-	int status;
+	int status = -1;
 
+#if defined(CDROM_SET_OPTIONS) && defined(CDROM_CLEAR_OPTIONS) 
 	if (onOff)
 		status = ioctl(fd, CDROM_SET_OPTIONS, CDO_AUTO_EJECT);
 	else
 		status = ioctl(fd, CDROM_CLEAR_OPTIONS, CDO_AUTO_EJECT);
+#else
+	errno = ENOSYS;
+#endif
 	if (status < 0) {
 		fprintf(stderr, _("%s: CD-ROM auto-eject command failed: %s\n"), programName, strerror(errno));
 		exit(1);
@@ -460,8 +511,12 @@ static void CloseTray(int fd)
 {
 	int status;
 
-#ifdef CDROMCLOSETRAY
+#if defined(CDROMCLOSETRAY) || defined(CDIOCCLOSE)
+#if defined(CDROMCLOSETRAY)
 	status = ioctl(fd, CDROMCLOSETRAY);
+#elif defined(CDIOCCLOSE)
+	status = ioctl(fd, CDIOCCLOSE);
+#endif
 	if (status != 0) {
 		fprintf(stderr, _("%s: CD-ROM tray close command failed: %s\n"), programName, strerror(errno));
 		exit(1);
@@ -625,13 +680,21 @@ static void ListSpeedCdrom(const char *fullName, int fd)
  */
 static int EjectCdrom(int fd)
 {
-	int status;
+	int status = -1;
 
+#if defined(CDROMEJECT)
 	status = ioctl(fd, CDROMEJECT);
+#elif defined(CDIOCEJECT)
+	status = ioctl(fd, CDIOCEJECT);
+#else
+/* Some kernels implement cdrom-eject only, but I don't think any kernel in the
+   world would implement eject only for non-cdrom drives.  Let's die. */
+# error
+#endif
 	return (status == 0);
 }
 
-
+#ifdef HAVE_EJECT_SCSI
 /*
  * Eject using SCSI SG_IO commands. Return 1 if successful, 0 otherwise.
  */
@@ -679,8 +742,10 @@ static int EjectScsi(int fd)
 	status = ioctl(fd, BLKRRPART);
 	return 1;
 }
+#endif
 
 
+#ifdef HAVE_EJECT_FLOPPY
 /*
  * Eject using FDEJECT ioctl. Return 1 if successful, 0 otherwise.
  */
@@ -691,8 +756,10 @@ static int EjectFloppy(int fd)
 	status = ioctl(fd, FDEJECT);
 	return (status >= 0);
 }
+#endif
 
 
+#ifdef HAVE_EJECT_TAPE
 /*
  * Eject using tape ioctl. Return 1 if successful, 0 otherwise.
  */
@@ -706,6 +773,7 @@ static int EjectTape(int fd)
 	status = ioctl(fd, MTIOCTOP, &op);
 	return (status >= 0);
 }
+#endif
 
 
 /* Unmount a device. */
@@ -715,12 +783,15 @@ static void Unmount(const char *fullName)
 
 	switch (fork()) {
 	  case 0: /* child */
-		  seteuid(getuid()); /* reduce likelyhood of security holes when running setuid */
-		  if(p_option)
-			  execl("/bin/umount", "/bin/umount", fullName, "-n", NULL);
-		  else
-			  execl("/bin/umount", "/bin/umount", fullName, NULL);
-		  fprintf(stderr, _("%s: unable to exec /bin/umount of `%s': %s\n"),
+		  setuid(getuid()); /* reduce likelyhood of security holes when running setuid */
+		  if(p_option) {
+			  execlp("pumount", "pumount", fullName, "-n", NULL);
+			  execlp("umount", "umount", fullName, "-n", NULL);
+		  } else {
+			  execlp("pumount", "pumount", fullName, NULL);
+			  execlp("umount", "umount", fullName, NULL);
+		  }
+		  fprintf(stderr, _("%s: unable to exec umount of `%s': %s\n"),
 				  programName, fullName, strerror(errno));
 		  exit(1);
 		  break;
@@ -761,13 +832,14 @@ static int OpenDevice(const char *fullName)
 static int GetMajorMinor(const char *name, int *maj, int *min)
 {
 	struct stat sstat;
-	*maj = *min = -1;
+	if (maj) *maj = -1;
+	if (min) *min = -1;
 	if (stat(name, &sstat) == -1)
 		return -1;
-	if (! S_ISBLK(sstat.st_mode))
+	if (! S_ISBLK(sstat.st_mode) && ! S_ISCHR(sstat.st_mode))
 		return -1;
-	*maj = major(sstat.st_rdev);
-	*min = minor(sstat.st_rdev);
+	if (maj) *maj = major(sstat.st_rdev);
+	if (min) *min = minor(sstat.st_rdev);
 	return 0;
 }
 
@@ -891,10 +963,10 @@ static void UnmountDevices(const char *pattern)
 				if (v_option)
 					printf(_("%s: unmounting `%s'\n"), programName, s2);
 				Unmount(s2);
-				regfree(&preg);
 			}
 		}
 	}
+	regfree(&preg);
 	FCLOSE(fp);
 }
 
@@ -1005,12 +1077,14 @@ int main(int argc, char **argv)
 	int worked = 0;    /* set to 1 when successfully ejected */
 	char *device = 0;  /* name passed from user */
 	char *fullName;    /* expanded name */
+	char *fullNameOrig;/* expanded name (links not resolved) */
 	char *deviceName;  /* name of device */
 	char *linkName;    /* name of device's symbolic link */
 	char *mountName;   /* name of device's mount point */
 	int fd; 	   /* file descriptor for device */
 	int mounted = 0;   /* true if device is mounted */
 	int mountable = 0; /* true if device is in /etc/fstab */
+	int result = 0;    /* store the result of a operation */
 	char *pattern;	   /* regex for device if multiple partitions */
 	int ld = 6;	   /* symbolic link max depth */
 
@@ -1044,54 +1118,72 @@ int main(int argc, char **argv)
 	if (v_option)
 		printf(_("%s: device name is `%s'\n"), programName, device);
 
-	/* figure out full device or mount point name */
-	fullName = FindDevice(device);
-	if (fullName == 0) {
-		fprintf(stderr, _("%s: unable to find or open device for: `%s'\n"), programName, device);
-		exit(1);
-	}
-	if (v_option)
-		printf(_("%s: expanded name is `%s'\n"), programName, fullName);
+	do {
+	  /* figure out full device or mount point name */
+	  fullName = FindDevice(device);
+	  if (fullName == 0) {
+	    fprintf(stderr, _("%s: unable to find or open device for: `%s'\n"), 
+		    programName, device);
+	    exit(1);
+	  }
+	  if (v_option)
+	    printf(_("%s: expanded name is `%s'\n"), programName, fullName);
 
-	/* check for a symbolic link */
-	while ((linkName = SymLink(fullName)) && (ld > 0)) {
-		if (v_option)
-			printf(_("%s: `%s' is a link to `%s'\n"), programName, fullName, linkName);
-		free(fullName);
-		fullName = strdup(linkName);
-		free(linkName);
-		linkName = 0;
-		ld--;
-	}
-	/* handle max depth exceeded option */
-	if (ld <= 0) {
-		printf(_("%s: maximum symbolic link depth exceeded: `%s'\n"), programName, fullName);
-		exit(1);
-	}
+	  /* check for a symbolic link */
+	  /* /proc/mounts doesn't resolve symbolic links */
+	  fullNameOrig = strdup(fullName);
+	  linkName = strdup(fullName); /* ensure linkName is initialized */
+	  if (!p_option) {
+	    while ((linkName = SymLink(fullName)) && (ld > 0)) {
+	      if (v_option)
+		printf(_("%s: `%s' is a link to `%s'\n"), programName,
+		       fullName, linkName);
+	      free(fullName);
+	      fullName = strdup(linkName);
+	      free(linkName);
+	      linkName = 0;
+	      ld--;
+	    }
+	  }
+	  /* handle max depth exceeded option */
+	  if (ld <= 0) {
+	    printf(_("%s: maximum symbolic link depth exceeded: `%s'\n"), programName, fullName);
+	    exit(1);
+	  }
 
-	/* if mount point, get device name */
-	mounted = MountedDevice(fullName, &mountName, &deviceName);
-	if (v_option) {
-		if (mounted)
-			printf(_("%s: `%s' is mounted at `%s'\n"), programName, deviceName, mountName);
-		else
-			printf(_("%s: `%s' is not mounted\n"), programName, fullName);
-	}
-	if (!mounted) {
-		deviceName = strdup(fullName);
-	}
+	  /* if mount point, get device name */
+	  mounted = MountedDevice(fullName, &mountName, &deviceName);
+	  if (v_option) {
+	    if (mounted)
+	      printf(_("%s: `%s' is mounted at `%s'\n"), programName,
+		     deviceName, mountName);
+	    else
+	      printf(_("%s: `%s' is not mounted\n"), programName, fullName);
+	  }
+	  if (!mounted) {
+	    deviceName = strdup(fullName);
+	  }
 
-	/* if not currently mounted, see if it is a possible mount point */
-	if (!mounted) {
-		mountable = MountableDevice(fullName, &mountName, &deviceName);
-		/* if return value -1 then fstab could not be read */
-		if (v_option && mountable >= 0) {
-			if (mountable)
-				printf(_("%s: `%s' can be mounted at `%s'\n"), programName, deviceName, mountName);
-			else
-				printf(_("%s: `%s' is not a mount point\n"), programName, fullName);
-		}
-	}
+	  /* if not currently mounted, see if it is a possible mount point */
+	  if (!mounted) {
+	    mountable = MountableDevice(fullName, &mountName, &deviceName);
+	    /* if return value -1 then fstab could not be read */
+	    if (v_option && mountable >= 0) {
+	      if (mountable)
+		printf(_("%s: `%s' can be mounted at `%s'\n"), programName, deviceName, mountName);
+	      else
+		printf(_("%s: `%s' is not a mount point\n"), programName, fullName);
+	    }
+	  }
+
+	  result = GetMajorMinor(deviceName, NULL, NULL);
+	  if (result == -1) {
+	      fprintf(stderr,
+		      _("%s: tried to use `%s' as device name but it is no block device\n"),
+		      programName, deviceName);
+	  }
+
+	} while (result == -1);
 
 	/* handle -n option */
 	if (n_option) {
@@ -1190,6 +1282,7 @@ int main(int argc, char **argv)
 		}
 	}
 
+#ifdef HAVE_EJECT_SCSI
 	if (s_option && !worked) {
 		if (v_option)
 			printf(_("%s: trying to eject `%s' using SCSI commands\n"), programName, deviceName);
@@ -1201,7 +1294,9 @@ int main(int argc, char **argv)
 				printf(_("%s: SCSI eject failed\n"), programName);
 		}
 	}
+#endif
 
+#ifdef HAVE_EJECT_FLOPPY
 	if (f_option && !worked) {
 		if (v_option)
 			printf(_("%s: trying to eject `%s' using floppy eject command\n"), programName, deviceName);
@@ -1213,7 +1308,9 @@ int main(int argc, char **argv)
 				printf(_("%s: floppy eject command failed\n"), programName);
 		}
 	}
+#endif
 
+#ifdef HAVE_EJECT_TAPE
 	if (q_option && !worked) {
 		if (v_option)
 			printf(_("%s: trying to eject `%s' using tape offline command\n"), programName, deviceName);
@@ -1225,6 +1322,7 @@ int main(int argc, char **argv)
 				printf(_("%s: tape offline command failed\n"), programName);
 		}
 	}
+#endif
 
 	if (!worked) {
 		fprintf(stderr, _("%s: unable to eject, last error: %s\n"), programName, strerror(errno));
@@ -1236,6 +1334,7 @@ int main(int argc, char **argv)
 	free(device);
 	free(deviceName);
 	free(fullName);
+	free(fullNameOrig);
 	free(linkName);
 	free(mountName);
 	free(pattern);
