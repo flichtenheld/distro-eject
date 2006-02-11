@@ -1216,16 +1216,6 @@ int main(int argc, char **argv)
 		exit(0);
 	}
 
-	/* handle -T option */
-	if (T_option) {
-		if (v_option)
-			printf(_("%s: toggling tray\n"), programName);
-		fd = OpenDevice(deviceName);
-		ToggleTray(fd);
-		HandleXOption(deviceName);
-		exit(0);
-	}
-	
 	/* handle -X option */
 	if (X_option) {
 		if (v_option)
@@ -1251,6 +1241,16 @@ int main(int argc, char **argv)
 	if ((m_option != 1) && (pattern != 0))
 		UnmountDevices(pattern);
 
+	/* handle -T option */
+	if (T_option) {
+		if (v_option)
+			printf(_("%s: toggling tray\n"), programName);
+		fd = OpenDevice(deviceName);
+		ToggleTray(fd);
+		HandleXOption(deviceName);
+		exit(0);
+	}
+	
 	/* handle -c option */
 	if (c_option) {
 		if (v_option)
