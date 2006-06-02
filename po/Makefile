@@ -3,7 +3,7 @@ PREFIX=$(DESTDIR)/usr
 INSTALL = install
 MODIR = $(PREFIX)/share/locale
 POTFILES = ../*.c ../*.h
-POFILES= de.po es.po fr.po ja.po tr.po zh_TW.po pt_BR.po
+POFILES= de.po es.po fr.po ja.po tr.po zh_TW.po pt_BR.po cs_CZ.po
 
 all:
 
