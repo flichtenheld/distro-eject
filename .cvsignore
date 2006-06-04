@@ -4,11 +4,14 @@ Makefile
 Makefile.in
 aclocal.m4
 build
+config.guess
 config.log
 config.status
+config.sub
 configure
 depcomp
 eject
 install-sh
 missing
+mkinstalldirs
 volname
