@@ -722,7 +722,7 @@ static int EjectScsi(int fd)
 	io_hdr.dxfer_len = 0;
 	io_hdr.dxferp = inqBuff;
 	io_hdr.sbp = sense_buffer;
-	io_hdr.timeout = 2000;
+	io_hdr.timeout = 10000;
 
 	io_hdr.cmdp = allowRmBlk;
 	status = ioctl(fd, SG_IO, (void *)&io_hdr);
