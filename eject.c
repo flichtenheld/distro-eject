@@ -606,13 +606,64 @@ static void ToggleTray(int fd)
  */
 static void SelectSpeedCdrom(int fd, int speed)
 {
-	int status;
+        unsigned long rw_size;
+        unsigned char buffer[28];
+        struct cdrom_generic_command cgc;
+        struct request_sense sense;
 
 #ifdef CDROM_SELECT_SPEED
-	status = ioctl(fd, CDROM_SELECT_SPEED, speed);
-	if (status != 0) {
-		fprintf(stderr, _("%s: CD-ROM select speed command failed: %s\n"), programName, strerror(errno));
-		exit(1);
+        memset(&cgc, 0, sizeof(cgc));
+        memset(&sense, 0, sizeof(sense));
+        memset(&buffer, 0, sizeof(buffer));
+
+        /* SET STREAMING command */
+        cgc.cmd[0] = 0xB6;
+        /* parameter list length: 28 bytes */
+        cgc.cmd[10] = 28;
+        
+        cgc.sense = &sense;
+        cgc.buffer = buffer;
+        cgc.buflen = sizeof(buffer);
+        cgc.data_direction = CGC_DATA_WRITE;
+        cgc.quiet = 1;
+
+        if(speed == 0) {
+          /* set Restore Drive Defaults */
+          buffer[0] = 4;
+        }
+
+        buffer[8] = 0xFF;
+        buffer[9] = 0xFF;
+        buffer[10] = 0xFF;
+        buffer[11] = 0xFF;
+
+        rw_size = 177 * speed;
+
+        /* read size */
+        buffer[12] = (rw_size >> 24) & 0xFF;
+        buffer[13] = (rw_size >> 16) & 0xFF;
+        buffer[14] = (rw_size >> 8) & 0xFF;
+        buffer[15] = rw_size & 0xFF;
+
+        /* read time: 1 second */
+        buffer[18] = 0x03;
+        buffer[19] = 0xE8;
+
+        /* write size */
+        buffer[20] = (rw_size >> 24) & 0xFF;
+        buffer[21] = (rw_size >> 16) & 0xFF;
+        buffer[22] = (rw_size >> 8) & 0xFF;
+        buffer[23] = rw_size & 0xFF;
+
+        /* write time: 1 second */
+        buffer[26] = 0x03;
+        buffer[27] = 0xE8;
+
+        if(ioctl(fd, CDROM_SEND_PACKET, &cgc) != 0) {
+                if(ioctl(fd, CDROM_SELECT_SPEED, speed) != 0) {
+		        fprintf(stderr, _("%s: CD-ROM select speed command failed: %s\n"), programName, strerror(errno));
+		        exit(1);
+                }
 	}
 #else
     fprintf(stderr, _("%s: CD-ROM select speed command not supported by this kernel\n"), programName);
