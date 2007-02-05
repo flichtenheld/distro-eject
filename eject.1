@@ -121,8 +121,8 @@ performed.
 .B \-r
 This option specifies that the drive should be ejected using a
 CDROM eject command.
-.TP 0.5i
 
+.TP 0.5i
 .B \-s
 This option specifies that the drive should be ejected using
 SCSI commands.
@@ -145,7 +145,7 @@ also passes the \-n option to umount(1).
 .TP 0.5i
 .B \-m
 This option allows eject to work with device drivers which automatically
-mount removable media and therefore must be always mount()ed.
+mount removable media and therefore must be always mount(1)ed.
 The option tells eject to not try to unmount the given device,
 even if it is mounted according to /etc/mtab or /proc/mounts.
 
