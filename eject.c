@@ -116,6 +116,7 @@ int d_option = 0;
 int f_option = 0;
 int h_option = 0;
 int n_option = 0;
+int i_option = 0;
 int q_option = 0;
 int r_option = 0;
 int s_option = 0;
@@ -129,6 +130,7 @@ int m_option = 0;
 int a_arg = 0;
 int c_arg = 0;
 int x_arg = 0;
+int i_arg = 0;
 static char *programName; /* used in error messages */
 
 /*
@@ -151,7 +153,6 @@ static const char *partitionDevice[] = {
 /* Display command usage on standard error and exit. */
 static void usage()
 {
-//    perror(_("%s: device is `%s'\n"));
 	fprintf(stderr,_(
 "Eject version %s by Jeff Tranter (tranter@pobox.com)\n"
 "Usage:\n"
@@ -163,6 +164,7 @@ static void usage()
 "  eject [-vn] -c <slot> [<name>]	-- switch discs on a CD-ROM changer\n"
 "  eject [-vn] -t [<name>]		-- close tray\n"
 "  eject [-vn] -T [<name>]		-- toggle tray\n"
+"  eject [-vn] -i on|off|1|0 [<name>]	-- toggle manual eject protection on/off\n"
 "  eject [-vn] -x <speed> [<name>]	-- set CD-ROM max speed\n"
 "  eject [-vn] -X [<name>]		-- list CD-ROM available speeds\n"
 "Options:\n"
@@ -214,7 +216,7 @@ static void usage()
 /* Handle command line options. */
 static void parse_args(int argc, char **argv, char **device)
 {
-	const char *flags = "a:c:x:dfhnqrstTXvVpm";
+	const char *flags = "a:c:x:i:dfhnqrstTXvVpm";
 #ifdef GETOPTLONG
 	static struct option long_options[] =
 	{
@@ -223,6 +225,7 @@ static void parse_args(int argc, char **argv, char **device)
 		{"default",	no_argument,	   NULL, 'd'},
 		{"auto",	required_argument, NULL, 'a'},
 		{"changerslot", required_argument, NULL, 'c'},
+		{"manualeject",	required_argument, NULL, 'i'},
 		{"trayclose",	no_argument,	   NULL, 't'},
 		{"traytoggle",	no_argument,	   NULL, 'T'},
 		{"cdspeed",	required_argument, NULL, 'x'},
@@ -296,6 +299,21 @@ static void parse_args(int argc, char **argv, char **device)
 		  case 'h':
 			  usage();
 			  exit(0);
+			  break;
+		  case 'i':
+			  i_option = 1;
+			  if (!strcmp(optarg, "0"))
+				  i_arg = 0;
+			  else if (!strcmp(optarg, "off"))
+				  i_arg = 0;
+			  else if (!strcmp(optarg, "1"))
+				  i_arg = 1;
+			  else if (!strcmp(optarg, "on"))
+				  i_arg = 1;
+			  else {
+				  fprintf(stderr, _("%s: invalid argument to -i option\n"), programName);
+				  exit(1);
+			  }
 			  break;
 		  case 'm':
 			  m_option = 1;
@@ -372,7 +390,7 @@ static int FileExists(const char *name, const int try, int *found)
 /*
  * Linux mangles spaces in mount points by changing them to an octal string
  * of '\040'.  So lets scan the mount point and fix it up by replacing all
- * occurrences off '\0##' with the ASCII value of 0##.  Requires a writable
+ * occurrences of '\0##' with the ASCII value of 0##.  Requires a writable
  * string as input as we mangle in place.  Some of this was taken from the
  * util-linux package.
  */
@@ -479,6 +497,30 @@ static char *FindDevice(const char *name)
 	free(buf);
 	buf = 0;
 	return 0;
+}
+
+
+/*
+ * Stops CDROM from opening on manual eject pressing the button.
+ * This can be useful when you carry your laptop
+ * in your bag while it's on and no CD inserted in it's drive.
+ * Implemented as found in Documentation/ioctl/cdrom.txt
+ *
+ * TODO: Maybe we should check this also:
+ * EDRIVE_CANT_DO_THIS   Door lock function not supported.
+ * EBUSY                 Attempt to unlock when multiple users
+ *                       have the drive open and not CAP_SYS_ADMIN
+ */
+static void ManualEject(int fd, int onOff) 
+{
+	if (ioctl(fd, CDROM_LOCKDOOR, onOff) < 0) {
+		perror("ioctl on CDROM_LOCKDOOR");
+        } else {
+            if (onOff)
+	        printf("CD-Drive may NOT be ejected with device button\n");
+            else
+                printf("CD-Drive may be ejected with device button\n");
+        }
 }
 
 
@@ -1273,6 +1315,13 @@ int main(int argc, char **argv)
 		printf(_("%s: device is `%s'\n"), programName, deviceName);
 		if (v_option)
 			printf(_("%s: exiting due to -n/--noop option\n"), programName);
+		exit(0);
+	}
+
+	/* handle -i option */
+	if (i_option) {
+		fd = OpenDevice(deviceName);
+		ManualEject(fd, i_arg);
 		exit(0);
 	}
 
