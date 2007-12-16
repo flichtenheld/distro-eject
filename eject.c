@@ -1028,13 +1028,9 @@ static int MountableDevice(const char *name, char **mountName, char **deviceName
 	int rc;
 
 	fp = fopen("/etc/fstab", "r");
+	
+	/* /etc/fstab may be unreadable in some situations due to passwords in the file. */
 	if (fp == NULL) {
-/*
- * /etc/fstab may be unreadable in some situations due to passwords in the
- * file.
- */
-/*		fprintf(stderr, _("%s: unable to open /etc/fstab: %s\n"), programName, strerror(errno));
-		exit(1);*/
 		if (v_option) {
 			printf( _("%s: unable to open /etc/fstab: %s\n"), programName, strerror(errno));
 		}
@@ -1044,6 +1040,11 @@ static int MountableDevice(const char *name, char **mountName, char **deviceName
 	while (fgets(line, sizeof(line), fp) != 0) {
 		rc = sscanf(line, "%1023s %1023s", s1, s2);
 		if (rc >= 2 && s1[0] != '#' && strcmp(s2, name) == 0) {
+			if (strncasecmp(s1, "UUID=", 5) == 0) {
+				char *realDeviceName = malloc(strlen(s1) + 32);
+				sprintf(realDeviceName, "/dev/disk/by-uuid/%s", s1 + 5);
+				strncpy(s1, realDeviceName, sizeof(s2)-1);
+			}
 			FCLOSE(fp);
 			*deviceName = DeMangleMount(strdup(s1));
 			*mountName = DeMangleMount(strdup(s2));
