@@ -30,6 +30,7 @@
  *
  */
 
+#include "config.h"
 #include "i18n.h"
 
 #ifndef DEFAULTDEVICE
